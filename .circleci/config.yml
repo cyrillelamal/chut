@@ -9,11 +9,14 @@ jobs:
           name: Run Docker
           command: docker-compose up -d
       - run:
+          name: Preapre environment variables
+          command: cp .env.example .env
+      - run:
           name: Install PHP dependencies
           command: docker-compose run composer sh -c "composer install && composer dump-autoload --optimize"
       - run:
           name: Install NodeJS dependencies
-          command: docker-compose run node sh -c "yarn install && yarn run build"
+          command: docker-compose run node sh -c "yarn install && yarn run prod"
       - run:
           name: Prepare the database
           command: |
