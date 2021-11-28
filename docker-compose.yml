@@ -1,0 +1,49 @@
+version: '3'
+services:
+    php:
+        build:
+            context: ./docker/php-fpm
+            dockerfile: ./Dockerfile
+        volumes:
+            - ./:/chut:rw
+        working_dir: /chut
+        depends_on:
+            - db
+    nginx:
+        image: nginx:alpine
+        volumes:
+            - ./docker/nginx/chut.conf:/etc/nginx/conf.d/chut.conf
+            - ./:/chut
+            - ./storage/logs/nginx:/var/log/nginx:rw
+        ports:
+            - '80:80'
+            - '443:443'
+        depends_on:
+            - php
+    db:
+        image: mariadb:5
+        environment:
+            MYSQL_ROOT_PASSWORD: 'password'
+            MYSQL_DATABASE: 'chut'
+            MYSQL_USER: 'chut_user'
+            MYSQL_PASSWORD: 'password'
+        volumes:
+            - db-data:/var/lib/mysql:rw
+        ports:
+            - '3306:3306'
+    composer:
+        image: composer:latest
+        working_dir: /chut
+        volumes:
+            - ./:/chut:rw
+    node:
+        build:
+            context: ./docker/node
+            dockerfile: ./Dockerfile
+        working_dir: /chut
+        volumes:
+            - ./:/chut:rw
+        environment:
+            NODE_OPTIONS: '--openssl-legacy-provider'  # - NODE_OPTIONS='--openssl-legacy-provider'
+volumes:
+    db-data:

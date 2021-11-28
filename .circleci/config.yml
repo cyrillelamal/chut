@@ -1,0 +1,26 @@
+version: 2.1
+jobs:
+  build:
+    machine:
+      image: ubuntu-2004:202107-02
+    steps:
+      - checkout
+      - run:
+          name: Run Docker
+          command: docker-compose up -d
+      - run:
+          name: Install PHP dependencies
+          command: docker-compose run composer sh -c "composer install && composer dump-autoload --optimize"
+      - run:
+          name: Install NodeJS dependencies
+          command: docker-compose run node sh -c "yarn install && yarn run build"
+      - run:
+          name: Prepare the database
+          command: |
+            docker-compose run php sh -c "wait-for-it.sh db:3306"
+            docker-compose run php sh -c "php artisan key:generate --env=testing --no-interaction"
+            docker-compose run php sh -c "php artisan migrate --env=testing --no-interaction"
+            docker-compose run php sh -c "php artisan db:seed --env=testing --no-interaction"
+      - run:
+          name: Run tests
+          command: docker-compose run php bash -c "php artisan test"
