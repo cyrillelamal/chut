@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\Security\LoginController;
 use Illuminate\Support\Facades\Route;
@@ -12,3 +13,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('web')->post('/login', LoginController::class);
 Route::middleware('web')->post('/register', RegisterController::class);
+Route::middleware('web')->post('/logout', LogoutController::class);
