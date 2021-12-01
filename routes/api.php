@@ -9,4 +9,4 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::post('/login', LoginController::class);
+Route::middleware('web')->post('/login', LoginController::class);

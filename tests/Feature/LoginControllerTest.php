@@ -17,16 +17,6 @@ class LoginControllerTest extends TestCase
     /**
      * @test
      */
-    public function client_can_login(): void
-    {
-        $response = $this->json(self::METHOD, self::URI);
-
-        $this->assertNotEquals(404, $response->status());
-    }
-
-    /**
-     * @test
-     */
     public function client_must_provide_email(): void
     {
         $credentials = $this->getValidCredentials();
@@ -98,7 +88,7 @@ class LoginControllerTest extends TestCase
         return [
             'email' => $user->email,
             'password' => 'password',
-            'device_name' => 'Foo'
+            'device_name' => 'Foo',
         ];
     }
 }

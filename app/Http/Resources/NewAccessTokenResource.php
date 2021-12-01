@@ -6,7 +6,13 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\NewAccessToken;
 use LogicException;
+use OpenApi\Annotations as OA;
 
+/**
+ * @OA\Schema(
+ *     @OA\Property(property="token", type="string", description="This token is used to made authenticated API requests"),
+ * )
+ */
 class NewAccessTokenResource extends JsonResource
 {
     /**
