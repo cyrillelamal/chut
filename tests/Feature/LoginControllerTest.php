@@ -80,7 +80,7 @@ class LoginControllerTest extends TestCase
         ]);
     }
 
-    public function getValidCredentials(): array
+    private function getValidCredentials(): array
     {
         /** @var User $user */
         $user = User::query()->inRandomOrder()->first();

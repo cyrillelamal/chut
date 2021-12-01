@@ -18,7 +18,7 @@ class LoginController extends Controller
      *     path="/api/login",
      *     @OA\RequestBody(@OA\JsonContent(ref="#/components/schemas/LoginRequest")),
      *     @OA\Response(response="201", @OA\JsonContent(ref="#/components/schemas/NewAccessTokenResource"), description="OK"),
-     *     @OA\Response(response="422", description="Unprocessable entity")
+     *     @OA\Response(response="422", description="Unprocessable entity"),
      * )
      */
     public function __invoke(LoginRequest $request): NewAccessTokenResource
