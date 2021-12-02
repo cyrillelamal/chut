@@ -17,7 +17,7 @@ class LogoutControllerTest extends TestCase
     /**
      * @test
      */
-    public function user_session_is_invalidated()
+    public function user_session_is_invalidated(): void
     {
         /** @var User $user */
         $user = User::query()->inRandomOrder()->first();

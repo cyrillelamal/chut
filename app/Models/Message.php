@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use OpenApi\Annotations as OA;
 
 /**
  * @property-read int|null $id
@@ -13,6 +14,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Carbon $updated_at
  * @property string $body
  * @property Participation|null $author
+ * @OA\Schema(
+ *     @OA\Property(property="id", type="integer"),
+ *     @OA\Property(property="created_at", type="string", format="date-time"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time"),
+ *     @OA\Property(property="body", type="string", description="Message content"),
+ * )
  */
 class Message extends Model
 {

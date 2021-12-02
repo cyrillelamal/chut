@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Security;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use OpenApi\Annotations as OA;
+use function response;
 
 class LogoutController extends Controller
 {
@@ -13,7 +15,7 @@ class LogoutController extends Controller
      * @OA\Post(
      *     path="/api/logout",
      *     description="Invalidate current user's session",
-     *     @OA\Response(response="201", description="OK")
+     *     @OA\Response(response="201", description="Ok")
      * )
      */
     public function __invoke(Request $request): Response

@@ -18,6 +18,7 @@ use Illuminate\Support\Collection;
  * @property User|null $user
  * @property Collection|Message[] $messages
  * @property Message|null $last_available_message
+ * @property int|null $conversation_id
  */
 class Participation extends Model
 {
