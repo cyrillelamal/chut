@@ -2,82 +2,64 @@
 
 namespace App\Http\Controllers;
 
+use App\Dtos\StartConversationDto;
+use App\Http\Requests\StoreConversationRequest;
+use App\Http\Resources\ConversationResource;
+use App\Models\Conversation;
+use App\UseCases\Conversation\StartConversation;
 use Illuminate\Http\Request;
+use OpenApi\Annotations as OA;
+use Throwable;
 
 class ConversationController extends Controller
 {
+    private StartConversation $startConversation;
+
+    public function __construct(
+        StartConversation $startConversation,
+    )
+    {
+        $this->authorizeResource(Conversation::class);
+
+        $this->startConversation = $startConversation;
+    }
+
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\Post(
+     *     path="/api/conversations",
+     *     description="Create public conversation",
+     *     @OA\RequestBody(@OA\JsonContent(ref="#/components/schemas/StoreConversationRequest")),
+     *     @OA\Response(
+     *         response="201",
+     *         description="Conversation created",
+     *         @OA\JsonContent(ref="#/components/schemas/ConversationResource"),
+     *     ),
+     *     @OA\Response(response="422", description="Unprocessable entity"),
+     * )
+     * @throws Throwable -> 500
      */
-    public function index()
+    public function store(StoreConversationRequest $request): ConversationResource
+    {
+        $dto = new StartConversationDto($request->validated());
+        $dto->users[] = auth()->id();
+        $dto->private = false;
+
+        $conversation = ($this->startConversation)($dto);
+
+        return new ConversationResource($conversation);
+    }
+
+    public function show(Conversation $conversation)
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function update(Request $request, Conversation $conversation)
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(Conversation $conversation)
     {
         //
     }

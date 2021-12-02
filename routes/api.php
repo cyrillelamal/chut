@@ -32,5 +32,6 @@ Route::middleware('auth:sanctum')
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('participations', ParticipationController::class)
         ->only('index');
-    Route::apiResource('conversations', ConversationController::class);
+    Route::apiResource('conversations', ConversationController::class)
+        ->only(['store', 'show', 'update', 'destroy']);
 });

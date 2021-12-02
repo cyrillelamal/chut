@@ -15,7 +15,7 @@ class LogoutController extends Controller
      * @OA\Post(
      *     path="/api/logout",
      *     description="Invalidate current user's session",
-     *     @OA\Response(response="201", description="Ok"),
+     *     @OA\Response(response="200", description="User logged out"),
      * )
      */
     public function __invoke(Request $request): Response
@@ -25,6 +25,6 @@ class LogoutController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return response(null, 201);
+        return response(null, 200);
     }
 }

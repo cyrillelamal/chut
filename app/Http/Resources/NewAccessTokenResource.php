@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\NewAccessToken;
@@ -30,5 +31,13 @@ class NewAccessTokenResource extends JsonResource
 
         Log::error('Unexpected resource instance', ['resource' => $token]);
         throw new LogicException('Unexpected resource instance');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function toResponse($request): JsonResponse
+    {
+        return parent::toResponse($request)->setStatusCode(201);
     }
 }

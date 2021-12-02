@@ -21,8 +21,8 @@ class UserController extends Controller
      *     ),
      *     @OA\Response(
      *         response="200",
+     *         description="List of users",
      *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/UserResource")),
-     *         description="Ok",
      *     )
      * )
      */

@@ -17,7 +17,11 @@ class LoginController extends Controller
      * @OA\Post(
      *     path="/api/login",
      *     @OA\RequestBody(@OA\JsonContent(ref="#/components/schemas/LoginRequest")),
-     *     @OA\Response(response="201", @OA\JsonContent(ref="#/components/schemas/NewAccessTokenResource"), description="Ok"),
+     *     @OA\Response(
+     *         response="201",
+     *         description="User logged in",
+     *         @OA\JsonContent(ref="#/components/schemas/NewAccessTokenResource"),
+     *     ),
      *     @OA\Response(response="422", description="Unprocessable entity"),
      * )
      */

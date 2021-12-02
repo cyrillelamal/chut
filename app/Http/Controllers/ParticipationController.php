@@ -20,8 +20,8 @@ class ParticipationController extends Controller
      *     description="Get latest user's participations",
      *     @OA\Response(
      *         response="200",
-     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/ParticipationResource")),
      *         description="Ok",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/ParticipationResource")),
      *     ),
      * )
      */
