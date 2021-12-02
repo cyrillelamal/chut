@@ -21,7 +21,7 @@ class ParticipationController extends Controller
      *     @OA\Response(
      *         response="200",
      *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/ParticipationResource")),
-     *         description="Ok"
+     *         description="Ok",
      *     ),
      * )
      */

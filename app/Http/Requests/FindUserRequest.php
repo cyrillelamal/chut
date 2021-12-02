@@ -4,7 +4,15 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use JetBrains\PhpStorm\Pure;
+use OpenApi\Annotations as OA;
 
+/**
+ * @property-read string $q
+ * @OA\Schema(
+ *     @OA\Property(property="q", type="string", description="Searched value"),
+ * )
+ */
 class FindUserRequest extends FormRequest
 {
     public function authorize(): bool
@@ -12,9 +20,18 @@ class FindUserRequest extends FormRequest
         return Auth::check();
     }
 
-    public function rules(): array
+    #[Pure] public function rules(): array
     {
         return [
+            'q' => $this->getQueryRiles(),
+        ];
+    }
+
+    #[Pure] protected function getQueryRiles(): array
+    {
+        return [
+            'required',
+            'min:1',
         ];
     }
 }

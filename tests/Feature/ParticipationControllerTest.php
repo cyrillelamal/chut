@@ -11,7 +11,7 @@ class ParticipationControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public const INDEX = '/api/participations';
+    const INDEX = '/api/participations';
 
     /**
      * @test

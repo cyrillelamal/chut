@@ -15,7 +15,7 @@ class LogoutController extends Controller
      * @OA\Post(
      *     path="/api/logout",
      *     description="Invalidate current user's session",
-     *     @OA\Response(response="201", description="Ok")
+     *     @OA\Response(response="201", description="Ok"),
      * )
      */
     public function __invoke(Request $request): Response

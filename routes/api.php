@@ -30,6 +30,7 @@ Route::middleware('auth:sanctum')
     ->name('users.find');
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('participations', ParticipationController::class)->only('index');
+    Route::apiResource('participations', ParticipationController::class)
+        ->only('index');
     Route::apiResource('conversations', ConversationController::class);
 });

@@ -15,7 +15,7 @@ class RegisterController extends Controller
      * @OA\Post(
      *     path="/api/register",
      *     @OA\RequestBody(@OA\JsonContent(ref="#/components/schemas/RegisterRequest")),
-     *     @OA\Response(response="201", description="Ok"),
+     *     @OA\Response(response="201", description="Ok", description="User must be authenticated manually"),
      *     @OA\Response(response="422", description="Unprocessable entity"),
      * )
      */
