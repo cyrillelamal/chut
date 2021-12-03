@@ -14,11 +14,12 @@ class ConversationControllerTest extends TestCase
     use DatabaseTransactions;
 
     const STORE = '/api/conversations';
+    const UPDATE = self::STORE . '/%d';
 
     /**
      * @test
      */
-    public function users_must_be_authenticated_to_create_a_new_conversation()
+    public function users_must_be_authenticated_to_start_a_new_conversation()
     {
         $this->json('POST', self::STORE, [])->assertStatus(401);
     }
@@ -26,7 +27,7 @@ class ConversationControllerTest extends TestCase
     /**
      * @test
      */
-    public function users_must_provide_at_least_one_user_id()
+    public function users_must_provide_at_least_one_user_id_to_start_a_new_conversation()
     {
         /** @var User $user */
         $user = User::query()->inRandomOrder()->first();
@@ -47,7 +48,7 @@ class ConversationControllerTest extends TestCase
     /**
      * @test
      */
-    public function initiator_participates_in_the_created_conversation(): void
+    public function initiator_participates_in_the_started_conversation(): void
     {
         /** @var User $user */
         $user = User::query()->inRandomOrder()->first();
@@ -90,7 +91,7 @@ class ConversationControllerTest extends TestCase
     /**
      * @test
      */
-    public function users_must_not_provide_title()
+    public function users_must_not_provide_title_when_they_start_a_new_conversation()
     {
         /** @var User $user */
         $user = User::query()->inRandomOrder()->first();
@@ -118,6 +119,28 @@ class ConversationControllerTest extends TestCase
                 'title' => $data['title'],
             ],
         ]);
+    }
+
+    /**
+     * @test
+     */
+    public function users_can_update_the_title_of_public_conversation(): void
+    {
+        /** @var Conversation $conversation */
+        $conversation = Conversation::query()->inRandomOrder()->where('private', false)->first();
+        /** @var Participation $participation */
+        $participation = $conversation->participations()->inRandomOrder()->first();
+
+        $uri = sprintf(self::UPDATE, $conversation->id);
+        $data = [
+            'title' => Str::random(4) . $conversation->title . Str::random(4),
+        ];
+
+        $this->actingAs($participation->user)->json('PATCH', $uri, $data);
+
+        $conversation->refresh();
+
+        $this->assertEquals($data['title'], $conversation->title);
     }
 
     private function getStoreRequestData(): array

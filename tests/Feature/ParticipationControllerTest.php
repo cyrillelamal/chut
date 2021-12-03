@@ -75,20 +75,20 @@ class ParticipationControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
-    public function listed_participations_have_link_to_conversation(): void
-    {
-        /** @var User $user */
-        $user = User::query()->inRandomOrder()->first();
-
-        $response = $this->actingAs($user)->json('GET', self::INDEX);
-
-        $response->assertJson(function (AssertableJson $json) {
-            $json->whereType('data.0.conversation', 'string')->etc();
-        });
-    }
+//    /**
+//     * @test
+//     */
+//    public function listed_participations_have_link_to_conversation(): void
+//    {
+//        /** @var User $user */
+//        $user = User::query()->inRandomOrder()->first();
+//
+//        $response = $this->actingAs($user)->json('GET', self::INDEX);
+//
+//        $response->assertJson(function (AssertableJson $json) {
+//            $json->whereType('data.0.conversation', 'string')->etc();
+//        });
+//    }
 
     /**
      * @test

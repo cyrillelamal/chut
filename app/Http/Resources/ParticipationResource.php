@@ -36,7 +36,7 @@ class ParticipationResource extends JsonResource
                 'created_at' => $participation->created_at,
                 'updated_at' => $participation->updated_at,
                 'visible_title' => $participation->visible_title,
-                'conversation' => route('conversations.show', ['conversation' => $participation->conversation_id]),
+//                'conversation' => route('conversations.show', ['conversation' => $participation->conversation_id]),
                 'conversation_id' => $participation->conversation_id,
                 'user_id' => $participation->user_id,
                 'last_available_message' => new MessageResource($participation->last_available_message),

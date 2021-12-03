@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Dtos\StartConversationDto;
 use App\Http\Requests\StoreConversationRequest;
+use App\Http\Requests\UpdateConversationRequest;
 use App\Http\Resources\ConversationResource;
 use App\Models\Conversation;
 use App\UseCases\Conversation\StartConversation;
-use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
 use Throwable;
 
@@ -49,18 +49,23 @@ class ConversationController extends Controller
         return new ConversationResource($conversation);
     }
 
-    public function show(Conversation $conversation)
+    /**
+     * @OA\Patch(
+     *     path="/api/conversations/{id}",
+     *     description="Update conversation",
+     *     @OA\Parameter(name="id", in="path", description="Conversation id", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(@OA\JsonContent(ref="#/components/schemas/UpdateConversationRequest")),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Conversation updated",
+     *         @OA\JsonContent(ref="#/components/schemas/ConversationResource"),
+     * )
+     * )
+     */
+    public function update(UpdateConversationRequest $request, Conversation $conversation): ConversationResource
     {
-        //
-    }
+        $conversation->update($request->validated());
 
-    public function update(Request $request, Conversation $conversation)
-    {
-        //
-    }
-
-    public function destroy(Conversation $conversation)
-    {
-        //
+        return new ConversationResource($conversation);
     }
 }
