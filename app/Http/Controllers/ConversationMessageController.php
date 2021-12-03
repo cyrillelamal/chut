@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreMessageRequest;
 use App\Http\Resources\MessageResource;
 use App\Models\Conversation;
 use App\Models\Message;
@@ -15,7 +16,7 @@ class ConversationMessageController extends Controller
      * @OA\Get(
      *     path="/api/conversations{id}/messages",
      *     description="List conversation messages",
-     *     @OA\Parameter(name="id", in="path", @OA\Schema(type="integer"), required=true, description="Conversation id"),
+     *     @OA\Parameter(name="id", in="path", description="Conversation id", required=true, @OA\Schema(type="integer")),
      *     @OA\Response(
      *         response="200",
      *         description="Paginated conversation messages",
@@ -36,9 +37,29 @@ class ConversationMessageController extends Controller
         return MessageResource::collection($messages);
     }
 
-    public function store()
+    /**
+     * @OA\Post(
+     *     path="/api/conversations{id}/messages",
+     *     description="Create message",
+     *     @OA\Parameter(name="id", in="path", @OA\Schema(type="integer"), required=true, description="Conversation id"),
+     *     @OA\Response(
+     *         response="201",
+     *         description="Created message",
+     *         @OA\JsonContent(ref="#/components/schemas/MessageResource"),
+     *     )
+     * )
+     */
+    public function store(StoreMessageRequest $request, Conversation $conversation): MessageResource
     {
+        /** @var Message $message */
+        $message = Message::factory()->make($request->validated());
 
+        $message->author()->associate($request->user());
+        $message->conversation()->associate($conversation);
+
+        $message->save();
+
+        return new MessageResource($message);
     }
 
     public function update()

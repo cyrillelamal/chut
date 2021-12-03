@@ -2,7 +2,7 @@
 
 namespace App\UseCases\Conversation;
 
-use App\Dtos\StartConversationDto;
+use App\DataTransferObjects\StartConversationDto;
 use App\Models\Conversation;
 use App\Models\Participation;
 use App\Models\User;
@@ -14,7 +14,7 @@ class StartConversation
      * Create a new conversation.
      *
      * @param StartConversationDto $dto
-     * @return Conversation
+     * @return Conversation created conversation.
      */
     public function __invoke(StartConversationDto $dto): Conversation
     {
@@ -22,7 +22,7 @@ class StartConversation
 
         DB::transaction(function () use ($conversation, $dto) {
             $participations = User::query()
-                ->whereIn('id', $dto->users)
+                ->whereIn('id', $dto->user_ids)
                 ->get()
                 ->map(function (User $user) use ($conversation) {
                     $participation = new Participation();

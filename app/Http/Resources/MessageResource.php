@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Message;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Log;
@@ -45,5 +46,19 @@ class MessageResource extends JsonResource
 
         Log::error('Invalid resource instance', ['resource' => $resource]);
         throw new LogicException('Invalid resource instance');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function toResponse($request): JsonResponse
+    {
+        $response = parent::toResponse($request);
+
+        if ($request->isMethod('POST')) {
+            $response->setStatusCode(201);
+        }
+
+        return $response;
     }
 }

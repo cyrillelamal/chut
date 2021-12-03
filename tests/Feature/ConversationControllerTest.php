@@ -6,6 +6,7 @@ use App\Models\Conversation;
 use App\Models\Participation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -21,7 +22,7 @@ class ConversationControllerTest extends TestCase
      */
     public function users_must_be_authenticated_to_start_a_new_conversation()
     {
-        $this->json('POST', self::STORE, [])->assertStatus(401);
+        $this->json('POST', self::STORE)->assertStatus(401);
     }
 
     /**
@@ -52,17 +53,13 @@ class ConversationControllerTest extends TestCase
     {
         /** @var User $user */
         $user = User::query()->inRandomOrder()->first();
-        $data = $this->getStoreRequestData();
 
-        $response = $this->actingAs($user)->json('POST', self::STORE, $data);
-
-        $id = $response->json('data.id');
-
-        /** @var Conversation $conversation */
-        $conversation = Conversation::query()->with('participations')->find($id);
-
-        $this->assertNotNull(
-            $conversation->participations->first(fn(Participation $participation) => $participation->user_id === $user->id)
+        $response = $this->actingAs($user)->json('POST', self::STORE, $this->getStoreRequestData());
+        $this->assertTrue(
+            DB::table('participations')
+                ->where('conversation_id', $response->json('data.id'))
+                ->where('user_id', $user->id)
+                ->exists()
         );
     }
 
@@ -91,7 +88,7 @@ class ConversationControllerTest extends TestCase
     /**
      * @test
      */
-    public function users_must_not_provide_title_when_they_start_a_new_conversation()
+    public function users_may_not_provide_title_when_they_start_a_new_conversation()
     {
         /** @var User $user */
         $user = User::query()->inRandomOrder()->first();
@@ -124,23 +121,27 @@ class ConversationControllerTest extends TestCase
     /**
      * @test
      */
-    public function users_can_update_the_title_of_public_conversation(): void
+    public function users_can_update_the_title_of_a_public_conversation(): void
     {
         /** @var Conversation $conversation */
         $conversation = Conversation::query()->inRandomOrder()->where('private', false)->first();
         /** @var Participation $participation */
-        $participation = $conversation->participations()->inRandomOrder()->first();
+        $participation = $conversation->participations->random();
 
-        $uri = sprintf(self::UPDATE, $conversation->id);
         $data = [
             'title' => Str::random(4) . $conversation->title . Str::random(4),
         ];
 
-        $this->actingAs($participation->user)->json('PATCH', $uri, $data);
+        $this->actingAs($participation->user)->json('PATCH', $this->update($conversation), $data);
 
         $conversation->refresh();
 
         $this->assertEquals($data['title'], $conversation->title);
+    }
+
+    private function update(Conversation $conversation): string
+    {
+        return sprintf(self::UPDATE, $conversation->id);
     }
 
     private function getStoreRequestData(): array

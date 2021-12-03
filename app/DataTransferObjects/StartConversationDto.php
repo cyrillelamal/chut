@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Dtos;
+namespace App\DataTransferObjects;
 
 use Spatie\DataTransferObject\DataTransferObject;
 
 class StartConversationDto extends DataTransferObject
 {
     /**
-     * User identifiers
-     *
      * @var int[]
      */
-    public array $users = [];
+    public array $user_ids = [];
 
     public bool $private = true;
 

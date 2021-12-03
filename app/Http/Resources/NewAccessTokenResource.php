@@ -29,8 +29,8 @@ class NewAccessTokenResource extends JsonResource
             ];
         }
 
-        Log::error('Unexpected resource instance', ['resource' => $token]);
-        throw new LogicException('Unexpected resource instance');
+        Log::error('Invalid resource instance', ['resource' => $token]);
+        throw new LogicException('Invalid resource instance');
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Dtos\StartConversationDto;
+use App\DataTransferObjects\StartConversationDto;
 use App\Http\Requests\StoreConversationRequest;
 use App\Http\Requests\UpdateConversationRequest;
 use App\Http\Resources\ConversationResource;
@@ -41,7 +41,7 @@ class ConversationController extends Controller
     public function store(StoreConversationRequest $request): ConversationResource
     {
         $dto = new StartConversationDto($request->validated());
-        $dto->users[] = auth()->id();
+        $dto->user_ids[] = auth()->id();
         $dto->private = false;
 
         $conversation = ($this->startConversation)($dto);

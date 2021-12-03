@@ -56,6 +56,12 @@ class ConversationResource extends JsonResource
      */
     public function toResponse($request): JsonResponse
     {
-        return parent::toResponse($request)->setStatusCode(201);
+        $response = parent::toResponse($request);
+
+        if ($request->isMethod('POST')) {
+            $response->setStatusCode(201);
+        }
+
+        return $response;
     }
 }

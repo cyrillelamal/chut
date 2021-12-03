@@ -3,7 +3,6 @@
 namespace App\Policies;
 
 use App\Models\Conversation;
-use App\Models\Participation;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
@@ -19,24 +18,16 @@ class ConversationPolicy
 
     public function read(?User $user, Conversation $conversation): bool
     {
-        if (null === $user) {
-            return false;
-        }
-
-        if ($conversation->relationLoaded('participations')) {
-            return $conversation->participations->contains(
-                fn(Participation $participation) => $participation->user_id === $user->id
-            );
-        }
-
-        return Participation::query()
-            ->where('user_id', $user->id)
-            ->where('conversation_id', $conversation->id)
-            ->exists();
+        return $user?->isParticipantOf($conversation) ?? false;
     }
 
     public function update(?User $user, Conversation $conversation): bool
     {
-        return $this->read($user, $conversation);
+        return $user?->isParticipantOf($conversation) ?? false;
+    }
+
+    public static function post(?User $user, Conversation $conversation): bool
+    {
+        return $user?->isParticipantOf($conversation) ?? false;
     }
 }

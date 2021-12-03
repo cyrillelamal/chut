@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Dtos\StartConversationDto;
+use App\DataTransferObjects\StartConversationDto;
 use App\Models\Conversation;
 use App\Models\Participation;
 use App\Models\User;
@@ -52,7 +52,7 @@ class StartConversationTest extends TestCase
      */
     public function it_creates_conversation_participations(): void
     {
-        $users = $this->dto->users;
+        $users = $this->dto->user_ids;
 
         $before = Participation::query()->count();
 
@@ -88,7 +88,7 @@ class StartConversationTest extends TestCase
      */
     public function it_forces_public_conversations(): void
     {
-        $this->dto->users = User::all()->map(fn(User $user) => $user->id)->toArray();
+        $this->dto->user_ids = User::all()->map(fn(User $user) => $user->id)->toArray();
         $this->dto->private = true;
 
         $conversation = ($this->startConversation)($this->dto);
@@ -101,7 +101,7 @@ class StartConversationTest extends TestCase
      */
     public function it_does_not_create_conversations_without_participants(): void
     {
-        $this->dto->users = [];
+        $this->dto->user_ids = [];
 
         $before = Conversation::query()->count();
 
@@ -139,7 +139,7 @@ class StartConversationTest extends TestCase
     {
         $dto = new StartConversationDto();
 
-        $dto->users = User::all()->random(2)->map(fn(User $user) => $user->id)->toArray();
+        $dto->user_ids = User::all()->random(2)->map(fn(User $user) => $user->id)->toArray();
         $dto->private = true;
         $dto->title = null;
 

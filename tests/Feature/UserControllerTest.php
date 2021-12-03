@@ -151,7 +151,7 @@ class UserControllerTest extends TestCase
     /**
      * @test
      */
-    public function search_results_do_not_contain_the_actual_user(): void
+    public function search_results_do_not_contain_the_searching_user(): void
     {
         /** @var User $user */
         $user = User::query()->inRandomOrder()->first();

@@ -49,17 +49,37 @@ class Participation extends Model
     protected static function booted()
     {
         static::creating(function (Participation $participation) {
-            $title = $participation->conversation->private
-                ? $participation
-                    ->conversation
-                    ->participations
-                    ->map(fn(Participation $p) => $p->user)
-                    ->filter(fn(User $interlocutor) => $participation->user->isNot($interlocutor))
-                    ->map(fn(User $interlocutor) => $interlocutor->name)
-                    ->first()
-                : $participation->conversation->title;
-
-            $participation->visible_title = Str::substr($title, 0, 255);
+            $participation->visible_title = Str::substr($participation->getTitle(), 0, 255);
         });
+    }
+
+    /**
+     * Check if this participation describes a private conversation.
+     */
+    public function isPrivate(): bool
+    {
+        return $this->conversation->private ?? true;
+    }
+
+    /**
+     * Get the title visible for other users.
+     */
+    public function getTitle(): string
+    {
+        return $this->isPrivate()
+            ? $this->getInterlocutorName()
+            : $this->conversation->title ?? '';
+    }
+
+    /**
+     * Get first interlocutor's name.
+     */
+    protected function getInterlocutorName(): string
+    {
+        return $this->conversation->participations
+                ->map(fn(Participation $participation) => $participation->user)
+                ->filter(fn(User $interlocutor) => $interlocutor->isNot($this->user))
+                ->map(fn(User $interlocutor) => $interlocutor->name)
+                ->first() ?? $this->user->name;
     }
 }
