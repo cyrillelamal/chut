@@ -49,6 +49,7 @@ class ParticipationSeeder extends Seeder
                 Participation::factory()->create([
                     'conversation_id' => $conversation,
                     'user_id' => $user,
+                    'visible_title' => $conversation->title,
                 ]);
             });
         });

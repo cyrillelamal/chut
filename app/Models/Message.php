@@ -12,7 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property string $body
- * @property Participation|null $author
+ * @property User|null $author
+ * @property Conversation|null $conversation
  */
 class Message extends Model
 {
@@ -24,6 +25,11 @@ class Message extends Model
 
     public function author(): BelongsTo
     {
-        return $this->belongsTo(Participation::class, 'author_id');
+        return $this->belongsTo(User::class, 'author_id');
+    }
+
+    public function conversation(): BelongsTo
+    {
+        return $this->belongsTo(Conversation::class);
     }
 }

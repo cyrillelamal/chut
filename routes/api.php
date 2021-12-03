@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\ConversationMessageController;
 use App\Http\Controllers\ParticipationController;
 use App\Http\Controllers\Security\LoginController;
 use App\Http\Controllers\Security\LogoutController;
@@ -28,7 +29,16 @@ Route::middleware('web')->group(function () {
 */
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/users', [UserController::class, 'find'])->name('users.find');
-    Route::apiResource('conversations', ConversationController::class)->only(['store', 'update']);
-    Route::apiResource('participations', ParticipationController::class)->only(['index']);
+    Route::get('/users', [UserController::class, 'find'])
+        ->name('users.find');
+
+    Route::apiResource('conversations', ConversationController::class)
+        ->only(['store', 'update']);
+
+    Route::apiResource('participations', ParticipationController::class)
+        ->only(['index']);
+
+    Route::apiResource('conversations.messages', ConversationMessageController::class)
+        ->shallow()
+        ->only(['index', 'store', 'update', 'destroy']);
 });

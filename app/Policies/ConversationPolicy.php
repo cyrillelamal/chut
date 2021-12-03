@@ -17,7 +17,7 @@ class ConversationPolicy
         return Auth::check();
     }
 
-    public function update(?User $user, Conversation $conversation): bool
+    public function read(?User $user, Conversation $conversation): bool
     {
         if (null === $user) {
             return false;
@@ -33,5 +33,10 @@ class ConversationPolicy
             ->where('user_id', $user->id)
             ->where('conversation_id', $conversation->id)
             ->exists();
+    }
+
+    public function update(?User $user, Conversation $conversation): bool
+    {
+        return $this->read($user, $conversation);
     }
 }

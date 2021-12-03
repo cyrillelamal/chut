@@ -13,8 +13,10 @@ class CreateMessagesTable extends Migration
             $table->timestamps();
             $table->text('body');
 
+            $table->unsignedBigInteger('conversation_id');
+            $table->foreign('conversation_id')->references('id')->on('conversations');
             $table->unsignedBigInteger('author_id');
-            $table->foreign('author_id')->references('id')->on('participations');
+            $table->foreign('author_id')->references('id')->on('users');
         });
 
         Schema::table('participations', function (Blueprint $table) {
