@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Jobs\SendMessage;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @property-read int|null $id
@@ -46,6 +48,11 @@ class Message extends Model
     {
         static::saved(function (Message $message) {
             $message->updateParticipations();
+        });
+
+        static::created(function (Message $message) {
+            Log::debug('Dispatching job', ['job' => SendMessage::class, 'arguments' => [$message]]);
+            SendMessage::dispatch($message);
         });
     }
 

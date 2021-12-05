@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Jobs\NotifyAboutNewConversation;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\Pure;
 
@@ -94,6 +96,11 @@ class Conversation extends Model
                 ? Str::substr($conversation->getTitle(), 0, 255)
                 : null;
         });
+
+        static::created(function (Conversation $conversation) {
+            Log::debug('Dispatching job', ['job' => NotifyAboutNewConversation::class, 'arguments' => [$conversation]]);
+            NotifyAboutNewConversation::dispatch($conversation);
+        });
     }
 
     /**
@@ -109,6 +116,14 @@ class Conversation extends Model
      * Check if this conversation may have a custom title.
      */
     #[Pure] public function canHaveTitle(): bool
+    {
+        return !$this->private;
+    }
+
+    /**
+     * Find whether this conversation is public.
+     */
+    public function isPublic(): bool
     {
         return !$this->private;
     }

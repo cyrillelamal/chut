@@ -51,8 +51,7 @@ class ConversationMessageController extends Controller
      */
     public function store(StoreMessageRequest $request, Conversation $conversation): MessageResource
     {
-        /** @var Message $message */
-        $message = Message::factory()->make($request->validated());
+        $message = new Message($request->validated());
 
         $message->author()->associate($request->user());
         $message->conversation()->associate($conversation);

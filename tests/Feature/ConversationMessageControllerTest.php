@@ -2,11 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\SendMessage;
 use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\Participation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -16,6 +18,12 @@ class ConversationMessageControllerTest extends TestCase
 
     const INDEX = '/api/conversations/%d/messages';
     const STORE = self::INDEX;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Queue::fake();
+    }
 
     /**
      * @test
@@ -158,6 +166,23 @@ class ConversationMessageControllerTest extends TestCase
         $this->assertTrue($created->isNot($participation->last_available_message));
         $participation->refresh();
         $this->assertTrue($created->is($participation->last_available_message));
+    }
+
+    /**
+     * @test
+     * @dataProvider data
+     */
+    public function it_notifies_participants(array $data): void
+    {
+        /** @var Conversation $conversation */
+        $conversation = Conversation::all()->random();
+        /** @var Participation $participation */
+        $participation = $conversation->participations->random();
+        Queue::fake();
+
+        $this->actingAs($participation->user)->json('POST', $this->store($conversation), $data);
+
+        Queue::assertPushed(SendMessage::class);
     }
 
     public function data(): iterable

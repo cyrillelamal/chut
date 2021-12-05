@@ -2,11 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\SendMessage;
 use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\Participation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -15,6 +17,12 @@ class UserMessageControllerTest extends TestCase
     use DatabaseTransactions;
 
     const STORE = '/api/users/%d/messages';
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Queue::fake();
+    }
 
     /**
      * @test
@@ -115,6 +123,23 @@ class UserMessageControllerTest extends TestCase
 
         $response->assertStatus(201);
         $this->assertEquals($before + 2, Participation::query()->count());
+    }
+
+    /**
+     * @test
+     * @dataProvider data
+     */
+    public function it_notifies_participants(array $data): void
+    {
+        $sender = User::all()->random();
+        /** @var User $receiver */
+        $receiver = User::factory()->create();
+
+        Queue::fake();
+
+        $this->actingAs($sender)->json('POST', $this->store($receiver), $data);
+
+        Queue::assertPushed(SendMessage::class);
     }
 
     public function data(): iterable

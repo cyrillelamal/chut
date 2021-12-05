@@ -45,5 +45,9 @@ services:
             - ./:/chut:rw
         environment:
             NODE_OPTIONS: '--openssl-legacy-provider'  # - NODE_OPTIONS='--openssl-legacy-provider'
+    redis:
+        image: redis:alpine
+        ports:
+            - '6379'
 volumes:
     db-data:

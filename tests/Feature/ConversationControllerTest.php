@@ -2,11 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\NotifyAboutNewConversation;
 use App\Models\Conversation;
 use App\Models\Participation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -16,6 +18,12 @@ class ConversationControllerTest extends TestCase
 
     const STORE = '/api/conversations';
     const UPDATE = self::STORE . '/%d';
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Queue::fake();
+    }
 
     /**
      * @test
@@ -137,6 +145,21 @@ class ConversationControllerTest extends TestCase
         $conversation->refresh();
 
         $this->assertEquals($data['title'], $conversation->title);
+    }
+
+    /**
+     * @test
+     */
+    public function it_notifies_participants(): void
+    {
+        /** @var User $user */
+        $user = User::query()->inRandomOrder()->first();
+
+        Queue::fake();
+
+        $this->actingAs($user)->json('POST', self::STORE, $this->getStoreRequestData());
+
+        Queue::assertPushed(NotifyAboutNewConversation::class);
     }
 
     private function update(Conversation $conversation): string
