@@ -29,7 +29,7 @@ class ConversationMessageController extends Controller
         Gate::authorize('read', $conversation);
 
         $messages = Message::query()
-            ->with(['author'])
+            ->with('author')
             ->where('conversation_id', $conversation->id)
             ->orderByDesc('messages.created_at')
             ->paginate();
@@ -60,15 +60,5 @@ class ConversationMessageController extends Controller
         $message->save();
 
         return new MessageResource($message);
-    }
-
-    public function update()
-    {
-
-    }
-
-    public function destroy()
-    {
-
     }
 }

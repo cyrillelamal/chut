@@ -10,8 +10,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
-            PublicConversationSeeder::class,
-            ParticipationSeeder::class,
+            PublicParticipationSeeder::class,
+            PrivateParticipationSeeder::class,
             MessageSeeder::class,
         ]);
     }

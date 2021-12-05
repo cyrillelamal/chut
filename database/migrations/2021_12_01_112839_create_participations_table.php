@@ -11,7 +11,7 @@ class CreateParticipationsTable extends Migration
         Schema::create('participations', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('visible_title', 255);
+            $table->string('visible_title', 255)->nullable();
 
             $table->foreignId('conversation_id')->constrained();
             $table->foreignId('user_id')->constrained();

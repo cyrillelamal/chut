@@ -7,6 +7,7 @@ use App\Http\Controllers\Security\LoginController;
 use App\Http\Controllers\Security\LogoutController;
 use App\Http\Controllers\Security\RegisterController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserMessageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,5 +41,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('conversations.messages', ConversationMessageController::class)
         ->shallow()
-        ->only(['index', 'store', 'update', 'destroy']);
+        ->only(['index', 'store']);
+
+    Route::apiResource('users.messages', UserMessageController::class)
+        ->shallow()
+        ->parameter('users', 'receiver')
+        ->only(['store']);
 });

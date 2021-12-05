@@ -31,7 +31,7 @@ class UserController extends Controller
         $users = User::query()
             ->where('name', 'LIKE', "%$request->q%")
             ->orWhere('email', 'LIKE', "%$request->q%")
-            ->where('id', '<>', auth()->id())
+            ->where('id', '<>', $request->user()->id)
             ->paginate();
 
         return UserResource::collection($users);

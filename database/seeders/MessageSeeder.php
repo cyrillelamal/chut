@@ -12,7 +12,7 @@ class MessageSeeder extends Seeder
     public function run()
     {
         Conversation::all()->each(function (Conversation $conversation) {
-            $participations = Participation::query()->where('conversation_id', $conversation->id)->get();
+            $participations = $conversation->participations()->get();
 
             for ($i = 0; $i < rand(2, 40); $i++) {
                 /** @var Participation $author */
@@ -24,7 +24,7 @@ class MessageSeeder extends Seeder
                     'conversation_id' => $author->conversation_id,
                 ]);
 
-                $author->conversation->participations()->update([
+                $conversation->participations()->update([
                     'last_available_message_id' => $message->id,
                 ]);
             }

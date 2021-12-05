@@ -8,9 +8,9 @@ use Illuminate\Foundation\Http\FormRequest;
 use JetBrains\PhpStorm\Pure;
 
 /**
- * @method User user($guard = null)
- * @property-read Conversation $conversation
  * @property-read string $body
+ * @property-read Conversation $conversation
+ * @method User user($guard = null)
  */
 class StoreMessageRequest extends FormRequest
 {

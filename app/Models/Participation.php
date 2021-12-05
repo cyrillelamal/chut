@@ -26,6 +26,10 @@ class Participation extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'visible_title',
+    ];
+
     public function conversation(): BelongsTo
     {
         return $this->belongsTo(Conversation::class, 'conversation_id');
@@ -62,7 +66,7 @@ class Participation extends Model
     }
 
     /**
-     * Get the title visible for other users.
+     * Get the title visible by the participating user.
      */
     public function getTitle(): string
     {
@@ -73,13 +77,14 @@ class Participation extends Model
 
     /**
      * Get first interlocutor's name.
+     * If there is no interlocutors, return the participating user's name.
      */
     protected function getInterlocutorName(): string
     {
-        return $this->conversation->participations
+        $interlocutor = $this->conversation->participations
                 ->map(fn(Participation $participation) => $participation->user)
-                ->filter(fn(User $interlocutor) => $interlocutor->isNot($this->user))
-                ->map(fn(User $interlocutor) => $interlocutor->name)
-                ->first() ?? $this->user->name;
+                ->first(fn(User $user) => $user->isNot($this->user)) ?? $this->user;
+
+        return $interlocutor->name ?? '';
     }
 }

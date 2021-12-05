@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\Pure;
 
@@ -39,6 +40,49 @@ class Conversation extends Model
     public function participations(): HasMany
     {
         return $this->hasMany(Participation::class);
+    }
+
+    /**
+     * Create a new private conversation.
+     * Private conversation has exactly two users, and it is unique.
+     */
+    public static function between(User $initiator, User $interlocutor): static
+    {
+        return DB::transaction(function () use ($initiator, $interlocutor) {
+            $conversation = new self(['private' => true]);
+            $conversation->save();
+
+            $initiator->participateIn($conversation)->save();
+            $interlocutor->participateIn($conversation)->save();
+
+            return $conversation;
+        });
+    }
+
+    /**
+     * Create a new public conversation.
+     * Public conversation has at least one user.
+     *
+     * @param iterable $users participants
+     * @param array $attributes model attributes
+     */
+    public static function among(iterable $users, array $attributes = []): static
+    {
+        return DB::transaction(function () use ($users, $attributes) {
+            if (empty([...$users])) {
+                abort(422);
+            }
+
+            $conversation = new self($attributes);
+            $conversation->private = false;
+            $conversation->save();
+
+            collect($users)->each(function (User $user) use ($conversation) {
+                $user->participateIn($conversation)->save();
+            });
+
+            return $conversation;
+        });
     }
 
     protected static function booted()
