@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\ConversationMessageController;
+use App\Http\Controllers\DiscoveryController;
 use App\Http\Controllers\ParticipationController;
 use App\Http\Controllers\Security\LoginController;
 use App\Http\Controllers\Security\LogoutController;
@@ -47,4 +48,6 @@ Route::middleware('auth:sanctum')->group(function () {
         ->shallow()
         ->parameter('users', 'receiver')
         ->only(['store']);
+
+    Route::get('/discovery', DiscoveryController::class)->name('discovery');
 });
