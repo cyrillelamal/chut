@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Events\ConversationStarted;
-use App\Models\Conversation;
+use App\Events\MessageSent;
+use App\Models\Message;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -11,22 +11,22 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class NotifyAboutNewConversation implements ShouldQueue
+class NotifyAboutNewMessage implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private Conversation $conversation;
+    private Message $message;
 
-    public function __construct(Conversation $conversation)
+    public function __construct(Message $message)
     {
-        $this->conversation = $conversation;
+        $this->message = $message;
     }
 
     public function handle()
     {
         Log::debug('Job started', ['job' => $this]);
 
-        ConversationStarted::dispatch($this->conversation);
+        MessageSent::dispatch($this->message);
 
         Log::debug('Job done', ['job' => $this]);
     }

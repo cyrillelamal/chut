@@ -4,20 +4,21 @@ require('./bootstrap');
 
 // axios.get('/sanctum/csrf-cookie').then(() => {
 //         axios.post('/api/login', {
-//             email: 'walsh.phoebe@example.com',
+//             email: 'elwin.nolan@example.com',
 //             password: 'password',
-//             device_name: 'foo',
+//             device_name: 'bar',
 //         }).then(log);
 //     }
 // );
 
-
-// axios.post('/api/users/5/messages', {
-//     body: 'Foo Bar'
+// axios.post('/api/conversations', {
+//     users: [1],
 // }).then(log);
 
+// axios.post('/api/conversations/480/messages', {
+//     body: 'Foooo',
+// }).then(log)
 
-// const token = () => document.cookie
-//     .split('; ')
-//     .find(row => row.startsWith('XSRF-TOKEN='))
-//     .split('=')[1];
+// Echo.private('users.1')
+//     .listen('MessageSent', log)
+//     .listen('ConversationStarted', log);

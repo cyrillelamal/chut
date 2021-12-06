@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Jobs\SendMessage;
+use App\Jobs\NotifyAboutNewMessage;
 use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\Participation;
@@ -18,12 +18,6 @@ class ConversationMessageControllerTest extends TestCase
 
     const INDEX = '/api/conversations/%d/messages';
     const STORE = self::INDEX;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        Queue::fake();
-    }
 
     /**
      * @test
@@ -182,7 +176,7 @@ class ConversationMessageControllerTest extends TestCase
 
         $this->actingAs($participation->user)->json('POST', $this->store($conversation), $data);
 
-        Queue::assertPushed(SendMessage::class);
+        Queue::assertPushed(NotifyAboutNewMessage::class);
     }
 
     public function data(): iterable

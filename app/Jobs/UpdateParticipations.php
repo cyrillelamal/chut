@@ -8,9 +8,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class SendMessage implements ShouldQueue
+class UpdateParticipations implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -23,8 +24,14 @@ class SendMessage implements ShouldQueue
 
     public function handle()
     {
-        Log::debug('Sending message');
-        sleep(1);
-        Log::debug('Message sent');
+        Log::debug('Job started', ['job' => $this]);
+
+        DB::table('participations')
+            ->where('conversation_id', $this->message->conversation_id)
+            ->update([
+                'last_available_message_id' => $this->message->id
+            ]);
+
+        Log::debug('Job done', ['job' => $this]);
     }
 }

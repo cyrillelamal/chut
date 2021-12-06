@@ -1,5 +1,5 @@
 {
-    "name": "laravel/laravel",
+    "name": "cyrillelamal/chut",
     "type": "project",
     "description": "The Laravel Framework.",
     "keywords": ["framework", "laravel"],
@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.0",
         "ext-pdo": "*",
+        "beyondcode/laravel-websockets": "^1.12",
         "doctrine/dbal": "^3.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",

@@ -35,6 +35,7 @@ class MessageResource extends JsonResource
                 'id' => $message->id,
                 'created_at' => $message->created_at,
                 'body' => $message->body,
+                'conversation' => $message->conversation,
             ];
 
             if ($message->relationLoaded('author')) {

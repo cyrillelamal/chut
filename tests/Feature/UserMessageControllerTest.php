@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Jobs\SendMessage;
+use App\Jobs\NotifyAboutNewMessage;
 use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\Participation;
@@ -139,7 +139,7 @@ class UserMessageControllerTest extends TestCase
 
         $this->actingAs($sender)->json('POST', $this->store($receiver), $data);
 
-        Queue::assertPushed(SendMessage::class);
+        Queue::assertPushed(NotifyAboutNewMessage::class);
     }
 
     public function data(): iterable

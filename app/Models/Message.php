@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use App\Jobs\SendMessage;
+use App\Jobs\NotifyAboutNewMessage;
+use App\Jobs\UpdateParticipations;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -47,22 +47,13 @@ class Message extends Model
     protected static function booted()
     {
         static::saved(function (Message $message) {
-            $message->updateParticipations();
+            Log::debug('Dispatching job', ['job' => UpdateParticipations::class, 'arguments' => [$message]]);
+            UpdateParticipations::dispatch($message);
         });
 
         static::created(function (Message $message) {
-            Log::debug('Dispatching job', ['job' => SendMessage::class, 'arguments' => [$message]]);
-            SendMessage::dispatch($message);
+            Log::debug('Dispatching job', ['job' => NotifyAboutNewMessage::class, 'arguments' => [$message]]);
+            NotifyAboutNewMessage::dispatch($message);
         });
-    }
-
-    /**
-     * Update the related participations, e.g. set a new latest message or a new title.
-     */
-    public function updateParticipations(): void
-    {
-        DB::table('participations')
-            ->where('conversation_id', $this->conversation_id)
-            ->update(['last_available_message_id' => $this->id]);
     }
 }
