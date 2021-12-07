@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use OpenApi\Annotations as OA;
 use function response;
@@ -22,7 +23,10 @@ class RegisterController extends Controller
      */
     public function __invoke(RegisterRequest $request): Response
     {
-        User::query()->create($request->validated());
+        $attributes = $request->validated();
+        $attributes['password'] = Hash::make($request->password);
+
+        User::query()->create($attributes);
         Log::info('New user', ['email' => $request->email]);
 
         return response(null, 201);
