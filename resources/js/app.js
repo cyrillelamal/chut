@@ -4,10 +4,8 @@ import React from "react";
 import ReactDom from "react-dom";
 import {BrowserRouter} from "react-router-dom";
 
-import {App} from "./components/App";
+import App from "./components/App";
 
-
-// const {log} = console;
 
 // axios.get('/sanctum/csrf-cookie').then(() => {
 //         axios.post('/api/login', {

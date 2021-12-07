@@ -1,24 +1,43 @@
 import React from "react";
-import {Routes, Route} from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
+import NotFound from "./common/NotFound";
+import ConversationList from "./conversation/ConversationList";
+import {getCsrfToken, getUser} from "../services/security";
+import Register from "./security/Register";
+import Login from "./security/Login";
+import {UserContext} from "./security/UserContext";
+import Logout from "./security/Logout";
+import Index from "./common/Index";
 
-const Foo = () => {
-    return <h1>foo</h1>
-}
 
-const Bar = () => {
-    return <h2>bar</h2>
-}
+export default class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: getUser(),
+        }
+    }
 
-export class App extends React.Component {
+    async componentDidMount() {
+        await getCsrfToken();
+    }
+
     render() {
         return (
             <div>
-                <h1>Salut !</h1>
-                <Routes>
-                    <Route path={'/foo'} element={<Foo/>}/>
-                    <Route path={'/bar'} element={<Bar/>}/>
-                </Routes>
+                <UserContext.Provider value={{user: this.state.user, setUser: this.setUser}}>
+                    <Routes>
+                        <Route path="/" element={<Index/>}/>
+                        <Route path="/register" element={<Register/>}/>
+                        <Route path="/login" element={<Login/>}/>
+                        <Route path="/logout" element={<Logout/>}/>
+                        <Route path="/conversations" element={<ConversationList/>}/>
+                        <Route path="*" element={<NotFound/>}/>
+                    </Routes>
+                </UserContext.Provider>
             </div>
         );
     }
+
+    setUser = (user) => this.setState({user});
 }
