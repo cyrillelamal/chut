@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import Anonymous from "../security/Anonymous";
-import Header from "./Header";
+import Anonymous from "./security/Anonymous";
+import Header from "./common/Header";
 
 export default class Index extends React.Component {
     render() {

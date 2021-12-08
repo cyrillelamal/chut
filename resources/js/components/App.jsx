@@ -1,13 +1,13 @@
 import React from "react";
 import {Route, Routes} from "react-router-dom";
-import NotFound from "./common/NotFound";
-import ConversationList from "./conversation/ConversationList";
+import NotFound from "./NotFound";
 import {getCsrfToken, getUser} from "../services/security";
 import Register from "./security/Register";
 import Login from "./security/Login";
 import {UserContext} from "./security/UserContext";
 import Logout from "./security/Logout";
-import Index from "./common/Index";
+import Index from "./Index";
+import Dashboard from "./dashboard/Dashboard";
 
 
 export default class App extends React.Component {
@@ -31,7 +31,7 @@ export default class App extends React.Component {
                         <Route path="/register" element={<Register/>}/>
                         <Route path="/login" element={<Login/>}/>
                         <Route path="/logout" element={<Logout/>}/>
-                        <Route path="/conversations" element={<ConversationList/>}/>
+                        <Route path="/dashboard/*" element={<Dashboard/>}/>
                         <Route path="*" element={<NotFound/>}/>
                     </Routes>
                 </UserContext.Provider>

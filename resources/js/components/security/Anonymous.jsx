@@ -6,7 +6,7 @@ export default class Anonymous extends React.Component {
     render() {
         return null === this.context.user
             ? (<div>{this.props.children}</div>)
-            : (<Navigate to="/conversations"/>);
+            : (<Navigate to="/dashboard"/>);
     }
 }
 
