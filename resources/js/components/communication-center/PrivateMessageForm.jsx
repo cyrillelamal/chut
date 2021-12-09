@@ -22,8 +22,7 @@ export default class PrivateMessageForm extends React.Component {
 
         if (this.state.body.length) {
             this.setState({submitted: true})
-            this.props.send && this.props.send(this.state.body)
-                .then(() => this.setState({body: '', submitted: false}));
+            this.props.send && this.props.send(this.state.body);
             return;
         }
 

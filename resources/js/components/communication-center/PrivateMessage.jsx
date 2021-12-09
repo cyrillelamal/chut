@@ -22,7 +22,7 @@ export default class PrivateMessage extends React.Component {
 
         if (null !== user) {
             return sendPrivateMessage(user.id, body)
-                .then(({data}) =>data['conversation'])
+                .then(({data}) => data['conversation'])
                 .then((conversation) => this.setState({conversationId: conversation.id}));
         }
 

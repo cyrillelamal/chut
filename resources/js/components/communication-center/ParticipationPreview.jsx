@@ -20,9 +20,11 @@ export default class ParticipationPreview extends React.Component {
     }
 
     get body() {
-        const body = this.props.hasOwnProperty('last_available_message')
-            ? this.props.last_available_message.body
+        const message = this.props.hasOwnProperty('last_available_message')
+            ? this.props.last_available_message
             : '';
+
+        const body = null === message ? '' : message.body;
 
         return body.length < 127 ? body : `${body.slice(0, 127)}...`;
     }

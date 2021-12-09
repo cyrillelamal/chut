@@ -5,10 +5,6 @@ import {findUsers} from "../../services/users";
 import UserPreview from "./UserPreview";
 
 export default class UserPicker extends React.Component {
-    static USER_PREVIEW_LIST_STYLE = {
-        maxHeight: '75vh',
-    }
-
     constructor(props) {
         super(props);
         this.state = {
@@ -89,10 +85,9 @@ export default class UserPicker extends React.Component {
                         />
                     </Form.Group>
                 </Form>
-                <Row className="flex-grow-1 overflow-auto p-3 mt-3"
-                     style={UserPicker.USER_PREVIEW_LIST_STYLE}
-                     onScroll={this.handleScroll}
-                >{this.state.users.map(this.userPreview)}</Row>
+                <Row className="flex-grow-1 overflow-auto p-3 mt-3" onScroll={this.handleScroll}>
+                    {this.state.users.map(this.userPreview)}
+                </Row>
             </div>
         );
     }

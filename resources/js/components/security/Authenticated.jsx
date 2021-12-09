@@ -6,7 +6,7 @@ export default class Authenticated extends React.Component {
     render() {
         return null === this.context.user
             ? (<Navigate to="/login"/>)
-            : (<div>{this.props.children}</div>);
+            : (<>{this.props.children}</>);
     }
 }
 

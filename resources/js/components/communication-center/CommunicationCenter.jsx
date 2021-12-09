@@ -22,7 +22,7 @@ export default class CommunicationCenter extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            tab: CommunicationCenter.TABS.PUBLIC_CONVERSATION,
+            tab: CommunicationCenter.TABS.PARTICIPATION_LIST,
         };
     }
 
@@ -31,13 +31,13 @@ export default class CommunicationCenter extends React.Component {
 
         return (
             <Authenticated>
-                <div className="container p-2 p-sm-5 vh-100">
-                    <div className="h-100 d-flex flex-column">
+                <div className="container p-3 py-4 vh-100">
+                    <div className="h-25 d-flex flex-column justify-content-evenly">
                         <Navbar/>
                         <Navigation tab={this.state.tab} setTab={this.setTab}/>
-                        <div className="flex-grow-1">
-                            {<Tab/>}
-                        </div>
+                    </div>
+                    <div className="h-75">
+                        {<Tab/>}
                     </div>
                 </div>
             </Authenticated>

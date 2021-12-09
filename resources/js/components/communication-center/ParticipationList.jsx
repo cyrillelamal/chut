@@ -3,10 +3,6 @@ import ParticipationPreview from "./ParticipationPreview";
 import {getLatestParticipations} from "../../services/participations";
 
 export default class ParticipationList extends React.Component {
-    static STYLE = {
-        maxHeight: '75vh',
-    }
-
     constructor(props) {
         super(props);
         this.state = {
@@ -27,6 +23,7 @@ export default class ParticipationList extends React.Component {
         const {scrollHeight, scrollTop, clientHeight} = e.target;
 
         if (clientHeight === scrollHeight - scrollTop) { // bottom
+            console.log(this)
             this.setState(
                 (state) => {
                     const {page, last_page} = state;
@@ -52,8 +49,10 @@ export default class ParticipationList extends React.Component {
 
     render() {
         return (
-            <div className="p-4 overflow-auto" style={ParticipationList.STYLE} onScroll={this.handleScroll}>
-                {this.state.participations.map(this.preview)}
+            <div className="h-100 d-flex flex-column p-4">
+                <div className="flex-grow-1 overflow-auto p-3 mt-3" onScroll={this.handleScroll}>
+                    {this.state.participations.map(this.preview)}
+                </div>
             </div>
         );
     }
