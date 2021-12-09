@@ -98,11 +98,12 @@ class User extends Authenticatable
     /**
      * Inscribe this user in the provided conversation.
      * @param Conversation $conversation
+     * @param array $attributes Initial participation attributes.
      * @return Participation Not persisted participation representation.
      */
-    public function participateIn(Conversation $conversation): Participation
+    public function participateIn(Conversation $conversation, array $attributes = []): Participation
     {
-        $participation = new Participation();
+        $participation = new Participation($attributes);
         $participation->conversation()->associate($conversation);
         $participation->user()->associate($this);
         return $participation;

@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 /**
  * @property-read int|null $id
@@ -48,13 +47,6 @@ class Participation extends Model
     public function last_available_message(): BelongsTo
     {
         return $this->belongsTo(Message::class, 'last_available_message_id');
-    }
-
-    protected static function booted()
-    {
-        static::creating(function (Participation $participation) {
-            $participation->visible_title = Str::substr($participation->getTitle(), 0, 255);
-        });
     }
 
     /**

@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use JetBrains\PhpStorm\Pure;
 
 /**
@@ -54,8 +53,8 @@ class Conversation extends Model
             $conversation = new self(['private' => true]);
             $conversation->save();
 
-            $initiator->participateIn($conversation)->save();
-            $interlocutor->participateIn($conversation)->save();
+            $initiator->participateIn($conversation, ['visible_title' => $interlocutor->name])->save();
+            $interlocutor->participateIn($conversation, ['visible_title' => $initiator->name])->save();
 
             return $conversation;
         });
@@ -77,10 +76,14 @@ class Conversation extends Model
 
             $conversation = new self($attributes);
             $conversation->private = false;
+            $conversation->title = $conversation->title ?? collect($users)->map(fn(User $user) => $user->name)->join(', ');
             $conversation->save();
 
-            collect($users)->each(function (User $user) use ($conversation) {
-                $user->participateIn($conversation)->save();
+            collect($users)->map(function (User $user) use ($conversation) {
+                $participation = $user->participateIn($conversation);
+                $participation->visible_title = $conversation->title;
+                $participation->save();
+                return $participation;
             });
 
             return $conversation;
@@ -91,10 +94,6 @@ class Conversation extends Model
     {
         static::creating(function (Conversation $conversation) {
             $conversation->private = $conversation->private && $conversation->canBePrivate();
-
-            $conversation->title = $conversation->canHaveTitle()
-                ? Str::substr($conversation->getTitle(), 0, 255)
-                : null;
         });
 
         static::created(function (Conversation $conversation) {
@@ -110,14 +109,6 @@ class Conversation extends Model
     #[Pure] public function canBePrivate(): bool
     {
         return $this->participations->count() <= 2;
-    }
-
-    /**
-     * Check if this conversation may have a custom title.
-     */
-    #[Pure] public function canHaveTitle(): bool
-    {
-        return !$this->private;
     }
 
     /**

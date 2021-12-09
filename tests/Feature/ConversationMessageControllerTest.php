@@ -49,8 +49,10 @@ class ConversationMessageControllerTest extends TestCase
      */
     public function participants_can_see_messages_of_the_conversation(): void
     {
+        /** @var Message $message */
+        $message = Message::query()->inRandomOrder()->first();
         /** @var Conversation $conversation */
-        $conversation = Conversation::query()->inRandomOrder()->first();
+        $conversation = $message->conversation;
         /** @var Participation $participation */
         $participation = $conversation->participations->random();
 
