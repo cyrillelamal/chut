@@ -8,6 +8,7 @@ import {UserContext} from "./security/UserContext";
 import Logout from "./security/Logout";
 import Index from "./Index";
 import CommunicationCenter from "./communication-center/CommunicationCenter";
+import Conversation from "./conversation/Conversation";
 
 
 export default class App extends React.Component {
@@ -32,6 +33,7 @@ export default class App extends React.Component {
                         <Route path="/login" element={<Login/>}/>
                         <Route path="/logout" element={<Logout/>}/>
                         <Route path="/cc" element={<CommunicationCenter/>}/>
+                        <Route path="/conversations/:id" element={<Conversation/>}/>
                         <Route path="*" element={<NotFound/>}/>
                     </Routes>
                 </UserContext.Provider>

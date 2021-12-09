@@ -33,7 +33,7 @@ class MessageResource extends JsonResource
 
             $data = [
                 'id' => $message->id,
-                'created_at' => $message->created_at,
+                'created_at' => $message->created_at->diffForHumans(),
                 'body' => $message->body,
                 'conversation' => $message->conversation,
             ];

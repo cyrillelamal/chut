@@ -29,7 +29,8 @@ class UpdateParticipations implements ShouldQueue
         DB::table('participations')
             ->where('conversation_id', $this->message->conversation_id)
             ->update([
-                'last_available_message_id' => $this->message->id
+                'last_available_message_id' => $this->message->id,
+                'updated_at' => now(),
             ]);
 
         Log::debug('Job done', ['job' => $this]);

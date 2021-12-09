@@ -34,7 +34,7 @@ class ParticipationResource extends JsonResource
             return [
                 'id' => $participation->id,
                 'created_at' => $participation->created_at,
-                'updated_at' => $participation->updated_at,
+                'updated_at' => $participation->updated_at->diffForHumans(),
                 'visible_title' => $participation->visible_title,
                 'conversation_id' => $participation->conversation_id,
                 'user_id' => $participation->user_id,

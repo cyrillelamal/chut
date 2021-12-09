@@ -14,7 +14,7 @@ class ConversationMessageController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/conversations{id}/messages",
+     *     path="/api/conversations/{id}/messages",
      *     description="List conversation messages",
      *     @OA\Parameter(name="id", in="path", description="Conversation id", required=true, @OA\Schema(type="integer")),
      *     @OA\Response(
@@ -39,7 +39,7 @@ class ConversationMessageController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/conversations{id}/messages",
+     *     path="/api/conversations/{id}/messages",
      *     description="Create message",
      *     @OA\Parameter(name="id", in="path", @OA\Schema(type="integer"), required=true, description="Conversation id"),
      *     @OA\Response(

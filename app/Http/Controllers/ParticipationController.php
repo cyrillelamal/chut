@@ -31,7 +31,7 @@ class ParticipationController extends Controller
             ->where('user_id', auth()->id())
             ->with('last_available_message')
             ->orderByDesc('participations.updated_at')
-            ->paginate();
+            ->paginate(6);
 
         return ParticipationResource::collection($participations);
     }

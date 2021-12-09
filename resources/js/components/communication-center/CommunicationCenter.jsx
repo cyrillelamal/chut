@@ -4,6 +4,7 @@ import Navigation from "./Navigation";
 import ParticipationList from "./ParticipationList";
 import PrivateMessage from "./PrivateMessage";
 import PublicConversation from "./PublicConversation";
+import Navbar from "./Navbar";
 
 export default class CommunicationCenter extends React.Component {
     static TABS = {
@@ -21,7 +22,7 @@ export default class CommunicationCenter extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            tab: CommunicationCenter.TABS.PARTICIPATION_LIST,
+            tab: CommunicationCenter.TABS.PUBLIC_CONVERSATION,
         };
     }
 
@@ -32,6 +33,7 @@ export default class CommunicationCenter extends React.Component {
             <Authenticated>
                 <div className="container p-2 p-sm-5 vh-100">
                     <div className="h-100 d-flex flex-column">
+                        <Navbar/>
                         <Navigation tab={this.state.tab} setTab={this.setTab}/>
                         <div className="flex-grow-1">
                             {<Tab/>}
