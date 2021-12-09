@@ -7,7 +7,7 @@ import Login from "./security/Login";
 import {UserContext} from "./security/UserContext";
 import Logout from "./security/Logout";
 import Index from "./Index";
-import Dashboard from "./dashboard/Dashboard";
+import CommunicationCenter from "./communication-center/CommunicationCenter";
 
 
 export default class App extends React.Component {
@@ -24,18 +24,18 @@ export default class App extends React.Component {
 
     render() {
         return (
-            <div>
+            <>
                 <UserContext.Provider value={{user: this.state.user, setUser: this.setUser}}>
                     <Routes>
                         <Route path="/" element={<Index/>}/>
                         <Route path="/register" element={<Register/>}/>
                         <Route path="/login" element={<Login/>}/>
                         <Route path="/logout" element={<Logout/>}/>
-                        <Route path="/dashboard/*" element={<Dashboard/>}/>
+                        <Route path="/cc" element={<CommunicationCenter/>}/>
                         <Route path="*" element={<NotFound/>}/>
                     </Routes>
                 </UserContext.Provider>
-            </div>
+            </>
         );
     }
 

@@ -1,10 +1,10 @@
 import React from "react";
 
-export default class StartConversation extends React.Component {
+export default class ParticipationList extends React.Component {
     render() {
         return (
             <div>
-                start conversation public
+                pars
             </div>
         );
     }
