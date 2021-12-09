@@ -32,6 +32,7 @@ class Conversation extends React.Component {
                     const {page, last_page} = state;
 
                     if (last_page <= page) {
+                        return {page: last_page};
                     }
 
                     getConversationMessages(this.id, page + 1)
