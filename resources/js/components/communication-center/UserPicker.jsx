@@ -3,8 +3,10 @@ import {Form, Row} from "react-bootstrap";
 import {DebounceInput} from "react-debounce-input";
 import {findUsers} from "../../services/users";
 import UserPreview from "./UserPreview";
+import {withTranslation} from "react-i18next";
+import {bottom} from "../../services/pagination";
 
-export default class UserPicker extends React.Component {
+class UserPicker extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -35,10 +37,8 @@ export default class UserPicker extends React.Component {
         }
     }
 
-    handleScroll = (e) => {
-        const {scrollHeight, scrollTop, clientHeight} = e.target;
-
-        if (clientHeight === scrollHeight - scrollTop) { // bottom
+    handleScroll = ({target}) => {
+        if (bottom(target)) { // bottom
             this.setState(
                 (state) => {
                     const {page, last_page, q} = state;
@@ -68,6 +68,8 @@ export default class UserPicker extends React.Component {
     userPreview = (user) => <UserPreview key={user.id} {...user} handleSelect={this.handleSelect}/>;
 
     render() {
+        const {t} = this.props;
+
         return (
             <div className="h-100 d-flex flex-column p-4">
                 <Form onSubmit={this.handleSubmit}>
@@ -76,7 +78,7 @@ export default class UserPicker extends React.Component {
                             type="search"
                             className="form-control"
                             name="q"
-                            placeholder={'Search for users'} // TODO: i18n
+                            placeholder={t('user.search_for')}
                             value={this.state.q}
                             onChange={this.handleChange}
                             debounceTimeout={510}
@@ -92,3 +94,5 @@ export default class UserPicker extends React.Component {
         );
     }
 }
+
+export default withTranslation()(UserPicker);

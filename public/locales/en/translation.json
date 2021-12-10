@@ -1,0 +1,39 @@
+{
+    "app": {
+        "name": "chut",
+        "description": "Awesome instant messaging application",
+        "invitation": "Start to use this awesome application",
+        "disclaimer": "By clicking Sign up, you agree to the terms of use."
+    },
+    "security": {
+        "login": "Log in",
+        "register": "Sign up",
+        "logout": "Log out",
+        "or_register": "Or create a new account",
+        "or_login": "Already have an account?",
+        "form": {
+            "name": "Your name",
+            "email": "Email address",
+            "password": "Password"
+        }
+    },
+    "conversation": {
+        "create": "Create",
+        "message": {
+            "start": "Start typing",
+            "send": "Send",
+            "send_private": "Send private message to {{name}}"
+        }
+    },
+    "navigation": {
+        "home": "Home page",
+        "recent_dialogues": "Recent dialogues",
+        "private_message": "Send private message",
+        "start_conversation": "Start conversation"
+    },
+    "user": {
+        "search_for": "Search for users"
+    },
+    "home": "Go to the home page",
+    "not_found": "The page you are looking for does not exist"
+}

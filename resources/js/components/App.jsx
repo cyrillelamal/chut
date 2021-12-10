@@ -1,19 +1,30 @@
-import React from "react";
+import React, {Suspense} from "react";
 import {Route, Routes} from "react-router-dom";
-import NotFound from "./NotFound";
-import {getCsrfToken, getUser} from "../services/security";
-import Register from "./security/Register";
-import Login from "./security/Login";
-import {UserContext} from "./security/UserContext";
-import Logout from "./security/Logout";
-import Index from "./Index";
-import CommunicationCenter from "./communication-center/CommunicationCenter";
-import Conversation from "./conversation/Conversation";
+
+
 import {discoverChannels} from "../services/echo";
+import {getCsrfToken, getUser} from "../services/security";
+
+
+import {UserContext} from "./security/UserContext";
 import {NotificationContext} from "./notification/NotificationContext";
+import LatestNotificationContext from "./notification/LatestNotificationContext";
+
+
+import Loading from "./Loading";
+
 import NotificationStack from "./notification/NotificationStack";
 import Notification from "../models/Notification";
-import LatestNotificationContext from "./notification/LatestNotificationContext";
+
+const Index = React.lazy(() => import("./Index"));
+const NotFound = React.lazy(() => import("./NotFound"));
+
+const Register = React.lazy(() => import("./security/Register"));
+const Login = React.lazy(() => import("./security/Login"));
+const Logout = React.lazy(() => import("./security/Logout"));
+
+const CommunicationCenter = React.lazy(() => import("./communication-center/CommunicationCenter"));
+const Conversation = React.lazy(() => import("./conversation/Conversation"));
 
 
 export default class App extends React.Component {
@@ -60,16 +71,17 @@ export default class App extends React.Component {
                 <UserContext.Provider value={this.userContext}>
                     <NotificationContext.Provider value={this.notifications}>
                         <LatestNotificationContext.Provider value={this.latestNotification}>
-
-                            <Routes>
-                                <Route path="/" element={<Index/>}/>
-                                <Route path="/register" element={<Register/>}/>
-                                <Route path="/login" element={<Login/>}/>
-                                <Route path="/logout" element={<Logout/>}/>
-                                <Route path="/cc" element={<CommunicationCenter/>}/>
-                                <Route path="/conversations/:id" element={<Conversation/>}/>
-                                <Route path="*" element={<NotFound/>}/>
-                            </Routes>
+                            <Suspense fallback={<Loading/>}>
+                                <Routes>
+                                    <Route path="/" element={<Index/>}/>
+                                    <Route path="/register" element={<Register/>}/>
+                                    <Route path="/login" element={<Login/>}/>
+                                    <Route path="/logout" element={<Logout/>}/>
+                                    <Route path="/cc" element={<CommunicationCenter/>}/>
+                                    <Route path="/conversations/:id" element={<Conversation/>}/>
+                                    <Route path="*" element={<NotFound/>}/>
+                                </Routes>
+                            </Suspense>
 
                             <NotificationStack notifications={this.notifications}
                                                setNotifications={this.setNotifications}/>

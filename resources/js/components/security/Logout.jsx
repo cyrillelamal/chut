@@ -1,17 +1,18 @@
 import React from "react";
-import {Navigate} from "react-router-dom";
 import {logout} from "../../services/security";
 import {UserContext} from "./UserContext";
+import Loading from "../Loading";
 
 export default class Logout extends React.Component {
     async componentDidMount() {
-        await logout().then((user) => this.context.setUser(user));
+        logout()
+            .then((user) => this.context.setUser(user))
+            .then(() => location.replace('/'));
+        // This hard redirect ensures that the CSRF token and the application context are reloaded.
     }
 
     render() {
-        return (
-            <Navigate to="/"/>
-        );
+        return (<Loading/>);
     }
 }
 

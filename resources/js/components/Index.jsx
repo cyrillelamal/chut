@@ -2,9 +2,12 @@ import React from "react";
 import {Link} from "react-router-dom";
 import Anonymous from "./security/Anonymous";
 import Header from "./common/Header";
+import {withTranslation} from "react-i18next";
 
-export default class Index extends React.Component {
+class Index extends React.Component {
     render() {
+        const {t} = this.props;
+
         return (
             <Anonymous>
                 <div className="container py-4">
@@ -13,19 +16,19 @@ export default class Index extends React.Component {
 
                     <div className="p-5 mb-4 bg-light rounded-3">
                         <div className="container-fluid py-5">
-                            <h1 className="display-5 fw-bold">{'chut'}{/* TODO: i18n */}</h1>
+                            <h1 className="display-5 fw-bold">{t('app.name')}</h1>
                             <p className="col-md-8 fs-4">
-                                {'Instant messaging application'}{/* TODO: i18n */}
+                                {t('app.description')}
                             </p>
                             <div className="d-flex flex-row justify-content-start">
                                 <div className="">
                                     <Link to="/login" className="btn btn-outline-secondary">
-                                        {'Log in'}{/* TODO: i18n */}
+                                        {t('security.login')}
                                     </Link>
                                 </div>
                                 <div className="ps-2">
                                     <Link to="/register" className="btn btn-outline-primary mr-3">
-                                        {'Sign up'}{/* TODO: i18n */}
+                                        {t('security.register')}
                                     </Link>
                                 </div>
                             </div>
@@ -36,3 +39,5 @@ export default class Index extends React.Component {
         );
     }
 }
+
+export default withTranslation()(Index);

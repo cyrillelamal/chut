@@ -1,8 +1,9 @@
 import React from "react";
 import SelectedUser from "./SelectedUser";
 import {Button} from "react-bootstrap";
+import {withTranslation} from "react-i18next";
 
-export default class SelectedUserList extends React.Component {
+class SelectedUserList extends React.Component {
     removeUser = (id) => {
         const users = this.props.users.filter(u => u.id !== id);
 
@@ -19,6 +20,8 @@ export default class SelectedUserList extends React.Component {
     user = (u) => <SelectedUser key={u.id} {...u} removeUser={this.removeUser}/>
 
     render() {
+        const {t} = this.props;
+
         return (
             <div className="overflow-auto h-100">
                 <div className="d-flex flex-row">
@@ -27,7 +30,7 @@ export default class SelectedUserList extends React.Component {
                     </div>
                     <div className="px-2 pt-3">
                         <Button variant="success" type="submit" onClick={this.handleClick}>
-                            {'Create'}{/* TODO: i18n */}
+                            {t('conversation.create')}
                         </Button>
                     </div>
                 </div>
@@ -35,3 +38,5 @@ export default class SelectedUserList extends React.Component {
         );
     }
 }
+
+export default withTranslation()(SelectedUserList);

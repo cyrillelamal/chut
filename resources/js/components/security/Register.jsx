@@ -3,9 +3,12 @@ import Anonymous from "./Anonymous";
 import RegisterForm from "./RegisterForm";
 import {Link} from "react-router-dom";
 import Header from "../common/Header";
+import {withTranslation} from "react-i18next";
 
-export default class Register extends React.Component {
+class Register extends React.Component {
     render() {
+        const {t} = this.props;
+
         return (
             <Anonymous>
                 <div className="container py-4">
@@ -15,14 +18,14 @@ export default class Register extends React.Component {
 
                         <div className="col-lg-7 text-center text-lg-start my-4">
                             <h1 className="display-4 fw-bold lh-1 mb-3">
-                                {'Sign up'}{/* TODO: i18n */}
+                                {t('security.register')}
                             </h1>
                             <p className="fs-4">
-                                {'Start to use this awesome application'}{/* TODO: i18n */}
+                                {t('app.invitation')}
                             </p>
                             <div className="d-grid gap-2 d-md-flex justify-content-center justify-content-lg-start">
                                 <Link to="/login">
-                                    {'Already have an account?'}{/* TODO: i18n */}
+                                    {t('security.or_login')}
                                 </Link>
                             </div>
                         </div>
@@ -37,3 +40,5 @@ export default class Register extends React.Component {
         );
     }
 }
+
+export default withTranslation()(Register);

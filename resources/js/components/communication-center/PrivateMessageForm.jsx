@@ -1,7 +1,8 @@
 import React from "react";
 import {Button, Form, Modal} from "react-bootstrap";
+import {withTranslation} from "react-i18next";
 
-export default class PrivateMessageForm extends React.Component {
+class PrivateMessageForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -34,17 +35,19 @@ export default class PrivateMessageForm extends React.Component {
     }
 
     render() {
+        const {t} = this.props;
+
         return (
             <Modal size="xl" centered backdrop="static" show={this.show} onHide={this.hide}>
                 <Modal.Header closeButton>
-                    {`Send private message to ${this.name}`}{/* TODO: i18n */}
+                    {t('conversation.message.send_private', {name: this.name})}
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={this.handleSubmit}>
                         <Form.Group>
                             <Form.Control
                                 as="textarea"
-                                placeholder={'Start typing'} // TODO: i18n
+                                placeholder={t('conversation.message.start')}
                                 value={this.state.body}
                                 onChange={this.handleChange}
                                 className={this.valid ? '' : 'border border-danger'}
@@ -54,7 +57,7 @@ export default class PrivateMessageForm extends React.Component {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="success" type="submit" onClick={this.handleSubmit} disabled={this.submitted}>
-                        {'Send'}{/* TODO: i18n */}
+                        {t('conversation.message.send')}
                     </Button>
                 </Modal.Footer>
             </Modal>
@@ -85,3 +88,5 @@ export default class PrivateMessageForm extends React.Component {
         return this.state.valid;
     }
 }
+
+export default withTranslation()(PrivateMessageForm);

@@ -1,7 +1,8 @@
 import React from "react";
 import {Button, Form} from "react-bootstrap";
+import {withTranslation} from "react-i18next";
 
-export default class MessageForm extends React.Component {
+class MessageForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -27,21 +28,25 @@ export default class MessageForm extends React.Component {
     }
 
     render() {
+        const {t} = this.props;
+
         return (
             <Form className="p-3" onSubmit={this.handleSubmit}>
                 <Form.Group className="mb-3">
                     <Form.Control
                         as="textarea"
                         rows="4"
-                        placeholder={'Start typing'} // TODO: i18n
+                        placeholder={t('conversation.message.start')}
                         value={this.state.body}
                         onChange={this.handleChange}
                     />
                 </Form.Group>
                 <Button variant="success" type="submit" onClick={this.handleSubmit}>
-                    {'Send'}{/* TODO: i18n */}
+                    {t('conversation.message.send')}
                 </Button>
             </Form>
         );
     }
 }
+
+export default withTranslation()(MessageForm);
