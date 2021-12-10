@@ -1,66 +1,59 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# bicrave-tp
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> Instant messaging application
 
-## About Laravel
+## General considerations
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+This application is a draft for a real world instant messaging application.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+The author doesn't pretend that his application has a very good architecture, structure, etc. Far from there: this is a
+training project!
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+The application is based on PHP8 and Laravel. The proposed database is MariaDB, but there is no vendor-specific queries
+nor raw queries.
 
-## Learning Laravel
+Bootstrap5 and React are used as the front-end technologies.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Redis is used as the queue.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Message broadcasting is done via Laravel Echo and `laravel-websockets`.
 
-## Laravel Sponsors
+## Some implemented features
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### Public and private conversations
 
-### Premium Partners
+Private conversation has only two users, and it is unique. Public conversations can include almost unlimited number of
+users.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[CMS Max](https://www.cmsmax.com/)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-- **[Romega Software](https://romegasoftware.com)**
+### Message broadcasting
 
-## Contributing
+Message broadcasting is done asynchronously. New messages and conversations are dispatched to the
+queue. `laravel-websockets` server is used as the Websocket server for demonstration purposes.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### SPA using React
 
-## Code of Conduct
+The proposed client implementation is an SPA. There are also loading indicators and i18n.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## How to install
 
-## Security Vulnerabilities
+Run `cs.sh` or repeat `build-dev` workflow on your machine (see `.circleci/config.yml`).
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### If it doesn't work:
 
-## License
+1. Copy the `.env.example` to `.env` and configure the environment variables. Pay attention to the
+   variables: `BROADCAST_DRIVER` and `QUEUE_CONNECTION`,
+2. Use Docker Compose to up containers: `docker-compose up -d`.
+3. Install dependencies: `docker-compose run composer sh -c "composer install && composer dump-autoload --optimize"`
+   and `docker-compose run node sh -c "yarn install && yarn run prod"`.
+4. Generate the application key: `php artisan key:generate --no-interaction`.
+5. Run database migrations `php artisan migrate --no-interaction`. Optionally, seed the
+   database: `php artisan db:seed --no-interaction`.
+6. The application is hosted at `chut.test`. To access it you have to update your `hosts` or deploy it somewhere else.
+7. Run queue workers: `docker-compose run -d php sh -c "php artisan queue:work redis"`.
+8. Start Websocket server: `docker-compose run -d php sh -c "php artisan websockets:serve"`.
+9. Profit!
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Test
+
+Tests are run on CircleCI. To run them locally, repeat `build-dev` workflow on your machine (see `.circleci/config.yml`)
+.
