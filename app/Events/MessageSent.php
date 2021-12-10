@@ -33,6 +33,7 @@ class MessageSent implements ShouldBroadcast
             ->join('participations', 'participations.user_id', '=', 'users.id')
             ->join('conversations', 'conversations.id', '=', 'participations.conversation_id')
             ->where('conversations.id', $this->message->conversation_id)
+            ->where('participations.user_id', '<>', $this->message->author_id)
             ->pluck('users.id');
 
         return array_map(

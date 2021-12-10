@@ -1,59 +1,101 @@
 import React from "react";
 import ParticipationPreview from "./ParticipationPreview";
 import {getLatestParticipations} from "../../services/participations";
+import {bottom, demandNewPage} from "../../services/pagination";
+import Participation from "../../models/Participation";
+import LatestNotificationContext from "../notification/LatestNotificationContext";
 
 export default class ParticipationList extends React.Component {
-    constructor(props) {
-        super(props);
+    constructor(props, context) {
+        super(props, context);
         this.state = {
             participations: [],
             page: 1,
             last_page: null,
         };
+
+        this.previous = this.context;
     }
 
     componentDidMount() {
         getLatestParticipations(1)
-            .then(
-                ({data, meta}) => this.setState({participations: data, last_page: meta.last_page})
-            );
+            .then(({data, meta}) => {
+                const participations = data.map(p => new Participation(p));
+                return {participations, last_page: meta.last_page};
+            })
+            .then(this.setState.bind(this));
     }
 
-    handleScroll = (e) => {
-        const {scrollHeight, scrollTop, clientHeight} = e.target;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.previous === this.context) {
+            return;
+        }
 
-        if (clientHeight === scrollHeight - scrollTop) { // bottom
-            console.log(this)
+        this.previous = this.context;
+
+        this.setState(state => {
+            const newest = Participation.buildFromNotification(this.context);
+            const bumped = state.participations.find(newest.isSame);
+
+            if (bumped) {
+                const intact = state.participations.filter(p => !newest.isSame(p));
+                return {participations: [newest, ...intact]};
+            }
+
+            return {participations: [newest, ...state.participations]};
+        });
+    }
+
+    handleScroll = ({target}) => {
+        if (bottom(target)) { // bottom
             this.setState(
                 (state) => {
                     const {page, last_page} = state;
 
-                    if (last_page <= page) {
-                        return {page: last_page};
-                    }
+                    const nextPage = demandNewPage(
+                        page, last_page,
+                        () => getLatestParticipations(page + 1)
+                            .then(({data}) => {
+                                const participations = data.map(p => new Participation(p));
+                                this.appendParticipations(participations);
+                            })
+                    );
 
-                    getLatestParticipations(page + 1)
-                        .then(
-                            ({data}) => this.setState(
-                                (state) => ({participations: [...state.participations, ...data]})
-                            )
-                        );
-
-                    return {page: page + 1};
+                    return {page: nextPage};
                 }
             );
         }
     }
 
-    preview = (p) => <ParticipationPreview key={p.id} {...p}/>;
+    appendParticipations = (participations) => {
+        this.setState(state => ({participations: [...state.participations, ...participations]}));
+    }
+
+    preview = (p) => <ParticipationPreview key={p.key} participation={p} uid={p.key}/>;
 
     render() {
         return (
             <div className="h-100 d-flex flex-column p-4">
                 <div className="flex-grow-1 overflow-auto p-3 mt-3" onScroll={this.handleScroll}>
-                    {this.state.participations.map(this.preview)}
+                    {this.participations.map(this.preview)}
                 </div>
             </div>
         );
     }
+
+    /**
+     * @return {Participation[]}
+     */
+    get participations() {
+        return this.state.participations;
+    }
+
+    /**
+     * @return {Notification[]}
+     */
+    get notifications() {
+        return this.context ?? [];
+    }
 }
+
+ParticipationList.contextType = LatestNotificationContext;

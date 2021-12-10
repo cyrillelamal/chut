@@ -25,7 +25,7 @@ class Conversation extends Model
     use HasFactory;
 
     protected $attributes = [
-        'title' => '',
+        'title' => null,
         'private' => true,
     ];
 
