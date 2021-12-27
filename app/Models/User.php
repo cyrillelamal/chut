@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Jobs\IndexUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
@@ -22,6 +24,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
+        'id',
         'name',
         'email',
         'password',
@@ -107,5 +110,13 @@ class User extends Authenticatable
         $participation->conversation()->associate($conversation);
         $participation->user()->associate($this);
         return $participation;
+    }
+
+    protected static function booted()
+    {
+        static::created(function (User $user) {
+            Log::debug('Dispatching job', ['job' => IndexUser::class, 'arguments' => [$user]]);
+            IndexUser::dispatch($user);
+        });
     }
 }

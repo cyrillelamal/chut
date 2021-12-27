@@ -107,25 +107,15 @@ class UserControllerTest extends TestCase
             'q' => Str::substr($kathy->name, 1),
         ]);
 
-        $response->assertJson([
-            'data' => [
-                0 => [
-                    'name' => $kathy->name,
-                ],
-            ],
-        ]);
+        $names = collect($response->json('data'))->map(fn(array $user) => $user['name']);
+        $this->assertContains($kathy->name, $names);
 
         $response = $this->actingAs($john)->json('GET', self::FIND, [
             'q' => Str::substr($kathy->name, 0, -1),
         ]);
 
-        $response->assertJson([
-            'data' => [
-                0 => [
-                    'name' => $kathy->name,
-                ],
-            ],
-        ]);
+        $names = collect($response->json('data'))->map(fn(array $user) => $user['name']);
+        $this->assertContains($kathy->name, $names);
     }
 
     /**
@@ -139,13 +129,8 @@ class UserControllerTest extends TestCase
             'q' => $kathy->name,
         ]);
 
-        $response->assertJson([
-            'data' => [
-                0 => [
-                    'name' => $kathy->name,
-                ],
-            ],
-        ]);
+        $names = collect($response->json('data'))->map(fn(array $user) => $user['name']);
+        $this->assertContains($kathy->name, $names);
     }
 
     /**

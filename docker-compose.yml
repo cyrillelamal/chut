@@ -10,7 +10,7 @@ services:
         depends_on:
             - db
     nginx:
-        image: nginx:alpine
+        image: nginx:1.19.10-alpine
         volumes:
             - ./docker/nginx/chut.conf:/etc/nginx/conf.d/chut.conf
             - ./:/chut
@@ -32,7 +32,7 @@ services:
         ports:
             - '3306:3306'
     composer:
-        image: composer:latest
+        image: composer:2.2.1
         working_dir: /chut
         volumes:
             - ./:/chut:rw
@@ -46,8 +46,19 @@ services:
         environment:
             NODE_OPTIONS: '--openssl-legacy-provider'  # - NODE_OPTIONS='--openssl-legacy-provider'
     redis:
-        image: redis:alpine
+        image: redis:6.0.16-alpine
         ports:
             - '6379'
+    typesense:
+        image: typesense/typesense:0.21.0
+        volumes:
+            - typesense-data:/data:rw
+        ports:
+            - '8108'
+        environment:
+            TYPESENSE_DATA_DIR: /data
+            TYPESENSE_API_KEY: xyz
+
 volumes:
     db-data:
+    typesense-data:

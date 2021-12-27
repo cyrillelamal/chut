@@ -4,12 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\FindUserRequest;
 use App\Http\Resources\UserResource;
-use App\Models\User;
+use App\Services\UserSearch\Exception\CannotSearchForUsersException;
+use App\Services\UserSearch\SearchParameters;
+use App\Services\UserSearch\UserSearchInterface;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use OpenApi\Annotations as OA;
 
 class UserController extends Controller
 {
+    private UserSearchInterface $userSearch;
+
+    public function __construct(
+        UserSearchInterface $userSearch,
+    )
+    {
+        $this->userSearch = $userSearch;
+    }
+
     /**
      * @OA\Get(
      *     path="/api/users",
@@ -25,15 +36,17 @@ class UserController extends Controller
      *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/UserResource")),
      *     )
      * )
+     * @throws CannotSearchForUsersException
      */
     public function find(FindUserRequest $request): AnonymousResourceCollection
     {
-        $users = User::query()
-            ->where('name', 'LIKE', "%$request->q%")
-            ->orWhere('email', 'LIKE', "%$request->q%")
-            ->where('id', '<>', $request->user()->id)
-            ->paginate();
+        $result = $this->userSearch->search($request->q, new SearchParameters(
+            ['name', 'email'],
+            ['name', 'email'],
+            ['email:!=' . $request->user()->email],
+            (int)$request->get('page', 1)
+        ));
 
-        return UserResource::collection($users);
+        return UserResource::collection($result->toPaginator());
     }
 }

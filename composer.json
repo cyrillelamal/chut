@@ -14,7 +14,9 @@
         "laravel/framework": "^8.65",
         "laravel/sanctum": "^2.12",
         "laravel/tinker": "^2.5",
-        "predis/predis": "^1.1"
+        "php-http/curl-client": "^2.2",
+        "predis/predis": "^1.1",
+        "typesense/typesense-php": "^4.7"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -60,7 +62,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
