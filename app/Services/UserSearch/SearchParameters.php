@@ -17,8 +17,10 @@ class SearchParameters implements Arrayable
     private int $page;
 
     /**
-     * @param string[] $queryBy
-     * @param string[] $facetBy
+     * @param string[] $queryBy The list of fields to query against.
+     * @param string[] $facetBy The list of fields that will be used for faceting the results on.
+     * @param string[] $filterBy Filter conditions for refining the search results.
+     * @param int $page The page number.
      */
     #[Pure] public function __construct(array $queryBy, array $facetBy, array $filterBy = [], int $page = 1)
     {

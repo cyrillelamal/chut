@@ -29,17 +29,14 @@ class MessageSent implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        $ids = DB::table('users')
+        return DB::table('users')
             ->join('participations', 'participations.user_id', '=', 'users.id')
             ->join('conversations', 'conversations.id', '=', 'participations.conversation_id')
             ->where('conversations.id', $this->message->conversation_id)
             ->where('participations.user_id', '<>', $this->message->author_id)
-            ->pluck('users.id');
-
-        return array_map(
-            fn(int $id) => new PrivateChannel("users.$id"),
-            $ids->toArray()
-        );
+            ->pluck('users.id')
+            ->map(fn(int $id) => new PrivateChannel("users.$id"))
+            ->toArray();
     }
 
     #[Pure] public function broadcastWith(): array

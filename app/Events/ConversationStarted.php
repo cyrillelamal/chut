@@ -28,16 +28,13 @@ class ConversationStarted implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        $ids = DB::table('users')
+        return DB::table('users')
             ->join('participations', 'participations.user_id', '=', 'users.id')
             ->join('conversations', 'conversations.id', '=', 'participations.conversation_id')
             ->where('conversations.id', $this->conversation->id)
-            ->pluck('users.id');
-
-        return array_map(
-            fn(int $id) => new PrivateChannel("users.$id"),
-            $ids->toArray()
-        );
+            ->pluck('users.id')
+            ->map(fn(int $id) => new PrivateChannel("users.$id"))
+            ->toArray();
     }
 
     #[Pure] public function broadcastWith(): array
