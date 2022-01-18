@@ -1,4 +1,4 @@
-# bicrave-tp
+# chut
 
 > Instant messaging application
 
@@ -36,24 +36,24 @@ The proposed client implementation is an SPA. There are also loading indicators 
 
 ## How to install
 
-Run `cs.sh` or repeat `build-dev` workflow on your machine (see `.circleci/config.yml`).
+Use `make`.
 
-### If it doesn't work:
+```shell
+# You can run a local copy of the application using the `local` target.
+make local
 
-1. Copy the `.env.example` to `.env` and configure the environment variables. Pay attention to the
-   variables: `BROADCAST_DRIVER` and `QUEUE_CONNECTION`,
-2. Use Docker Compose to up containers: `docker-compose up -d`.
-3. Install dependencies: `docker-compose run composer sh -c "composer install && composer dump-autoload --optimize"`
-   and `docker-compose run node sh -c "yarn install && yarn run prod"`.
-4. Generate the application key: `php artisan key:generate --no-interaction`.
-5. Run database migrations `php artisan migrate --no-interaction`. Optionally, seed the
-   database: `php artisan db:seed --no-interaction`.
-6. The application is hosted at `chut.test`. To access it you have to update your `hosts` or deploy it somewhere else.
-7. Run queue workers: `docker-compose run -d php sh -c "php artisan queue:work redis"`.
-8. Start Websocket server: `docker-compose run -d php sh -c "php artisan websockets:serve"`.
-9. Profit!
+# Or you can just run tests and tear down the application after that.
+make testing
+```
+
+The local copy of the application is available at [http://chut.test](http://chut.test), so you have to refine
+your `hosts` file or change the nginx config ([docker/nginx/chut.conf](docker/nginx/chut.conf)) to be able to access the
+application.
 
 ### Test
 
-Tests are run on CircleCI. To run them locally, repeat `build-dev` workflow on your machine (see `.circleci/config.yml`)
-.
+Tests are run on CircleCI. You can also run `make testing` to run them locally.
+
+### Documentation
+
+You can also build Swagger documentation. To do it, point your openapi script to the `app` directory.
